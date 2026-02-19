@@ -1,110 +1,25 @@
-local OrionLib =  loadstring(game:HttpGet("https://raw.githubusercontent.com/jadpy/suki/refs/heads/main/orion"))()
-local Window = OrionLib:MakeWindow({Name = "🐦‍⬛Yoizaki🐦‍⬛", HidePremium = true, SaveConfig = false})
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
 
--- [[ 設定セクション ]]
-local CorrectKey = "Yoizaki" -- 認証キー
-local KeyInput = ""
-local Attempts = 0
-local MaxAttempts = 3
-local IsLoaded = false
+-- プレイヤーのUIコンテナを取得
+local playerGui = player:WaitForChild("PlayerGui")
 
--- [[ メイン機能（認証後にここが表示される） ]]
-function LoadMainScript()
-    if IsLoaded then return end
-    IsLoaded = true
+-- 1. 新しいScreenGuiを作成
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "MyCustomUI"
+screenGui.Parent = playerGui
 
-    local Tab1 = Window:MakeTab({Name = "Script", Icon = "rbxassetid://4483362458"})
-    local Tab2 = Window:MakeTab({Name = "tp", Icon = "rbxassetid://4483362458"})
+-- 2. ボタンを作成
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0, 200, 0, 50) -- 横200, 縦50ピクセル
+button.Position = UDim2.new(0.5, -100, 0.5, -25) -- 画面中央
+button.Text = "ここをクリック！"
+button.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+button.TextColor3 = Color3.fromRGB(255, 255, 255)
+button.Parent = screenGui
 
-Tab2:AddButton({
-    Name = "Kingへtp",
-    Callback = function()
-        local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-
-if character and character:FindFirstChild("HumanoidRootPart") then
-    character.HumanoidRootPart.CFrame = CFrame.new(4, 1401, -44)
-end
-    end    
-})
-
-
-Tab2:AddButton({
-    Name = "荒らし",
-    Callback = function()
-        local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-
-if character and character:FindFirstChild("HumanoidRootPart") then
-    character.HumanoidRootPart.CFrame = CFrame.new(5, 1400, -12)
-end
-    end    
-})
-
-Tab2:AddButton({
-    Name = "地上",
-    Callback = function()
-        local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-
-if character and character:FindFirstChild("HumanoidRootPart") then
-    character.HumanoidRootPart.CFrame = CFrame.new(102, 573, -2)
-end
-    end    
-})
-
-
-Tab1:AddButton({
-    Name = "座標",
-    Callback = function()
-        loadstring(game:HttpGet("https://pastebin.com/raw/2RkwMiLp"))()
-    end    
-})
-
-Tab1:AddButton({
-    Name = "煽るよう",
-    Callback = function()
-        loadstring(game:HttpGet("https://pastebin.com/raw/09025Qs5"))()
-    end    
-})
-end
--- [[ キー認証タブ（最初に出るやつ） ]]
-local KeyTab = Window:MakeTab({Name = "Key🔑", Icon = "rbxassetid://4483362458"})
-
-KeyTab:AddTextbox({
-    Name = "KeyはYoizakiです。",
-    Default = "",
-    TextDisappear = true,
-    Callback = function(Value)
-        KeyInput = Value
-    end
-})
-
-KeyTab:AddButton({
-    Name = "🔓 認証する",
-    Callback = function()
-        if KeyInput == CorrectKey then
-            OrionLib:MakeNotification({
-                Name = "Access Granted",
-                Content = "🩷Yoizaki hub🩷",
-                Time = infinite -- 無限表示
-            })
-            LoadMainScript() -- メイン機能をロード
-        else
-            Attempts = Attempts + 1
-            local Left = MaxAttempts - Attempts
-            
-            if Attempts >= MaxAttempts then
-                game.Players.LocalPlayer:Kick("\n【Galaxy Hub】\n認証に3回失敗したため、安全のために追放されました。")
-            else
-                OrionLib:MakeNotification({
-                    Name = "Wrong Key",
-                    Content = "キーが違います。残り: " .. tostring(Left) .. "回",
-                    Time = 3
-                })
-            end
-        end
-    end
-})
-
-OrionLib:Init()
+-- 3. ボタンが押された時の処理
+button.MouseButton1Click:Connect(function()
+    button.Text = "クリックされました！"
+    print(player.Name .. "さんがボタンを押しました。")
+end)
